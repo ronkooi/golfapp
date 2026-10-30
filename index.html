@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Zeegersloot Griendbaan - Scorekaart</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#14532d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Griendbaan">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header class="app-header">
+    <div class="brand">
+      <img src="icons/icon.svg" alt="Zeegersloot Logo" class="brand-logo">
+      <div class="brand-text">
+        <h1>Zeegersloot</h1>
+        <p>Griendbaan (Holes 1-9)</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <!-- Samsung Flip Coverscherm Modus Schakelaar -->
+      <button id="btnCoverModeToggle" class="btn-mode-toggle" title="Wissel tussen normaal scherm en Samsung Flip coverscherm">
+        <span id="coverModeIcon">📱</span> <span id="coverModeLabel">Coverscherm</span>
+      </button>
+      <button id="btnGpsToggle" class="btn-icon" title="GPS status verversen">
+        📍
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="main-content">
+
+    <!-- ================= VIEW 1: SETUP & CHECK-IN ================= -->
+    <section id="viewSetup" class="app-view">
+      
+      <!-- Golfdashboard Inchecken Card -->
+      <div class="checkin-banner" id="checkinBanner">
+        <h3>⛳ Stap 1: Inchecken bij de Afslag</h3>
+        <p>Log in op <strong>zeegersloot.golfdashboard.com</strong> en kies de optie <strong>Inchecken</strong>.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a id="btnOpenGolfdashboard" href="https://zeegersloot.golfdashboard.com" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+            🌐 1. Open zeegersloot.golfdashboard.com (Inchecken)
+          </a>
+          
+          <button id="btnQuickStartAfterCheckin" class="btn btn-primary" style="display: none;">
+            ✅ 2. Ingecheckt! Start Direct Scorekaart ▶
+          </button>
+        </div>
+
+        <div style="margin-top: 10px; font-size: 11px; color: #a7f3d0; display: flex; justify-content: space-between; align-items: center;">
+          <span>URL: <span id="displayDashboardUrl">zeegersloot.golfdashboard.com</span></span>
+          <a href="#" id="btnEditDashboardUrl" style="color: #6ee7b7; text-decoration: underline;">URL aanpassen</a>
+        </div>
+      </div>
+
+      <!-- Resumable active round prompt if exists -->
+      <div id="resumeRoundBanner" class="card" style="display: none; border-color: var(--accent-gold); background: #1a2216;">
+        <h4 style="color: var(--accent-gold); margin-bottom: 6px;">↺ Lopende ronde gevonden</h4>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Er is nog een niet-afgeronde ronde op de baan.</p>
+        <button id="btnResumeRound" class="btn btn-primary" style="margin-bottom: 8px;">Ga Verder Met Ronde ▶</button>
+        <button id="btnDiscardRound" class="btn btn-secondary" style="font-size: 12px; padding: 6px;">Verwijder deze ronde</button>
+      </div>
+
+      <div class="card">
+        <h2 class="screen-title">Nieuwe Ronde Starten</h2>
+        <p class="screen-subtitle">Vul de speelpartner en jouw gegevens in</p>
+
+        <!-- 1E SPELER: Speelpartner (ALTIJD EERST) -->
+        <div class="player-box partner-box">
+          <div class="player-box-header">
+            <span class="player-badge partner">1e Invoer: Speelpartner</span>
+            <span id="partnerPhcpDisplay" class="strokes-received-chip">Baanhandicap: -</span>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputPartnerName">Naam speelpartner</label>
+            <input type="text" id="inputPartnerName" class="form-input" placeholder="Bijv. Jan" value="Speelpartner">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="inputPartnerHcp">WHS Handicap</label>
+              <input type="number" id="inputPartnerHcp" class="form-input" step="0.1" min="-10" max="54" placeholder="Bijv. 28.4" value="28.0">
+            </div>
+            <div class="form-group">
+              <label>Standaard Tee</label>
+              <div class="tee-pills" id="partnerTeePills">
+                <!-- Dynamisch gevuld -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2E SPELER: Gebruiker Zelf -->
+        <div class="player-box user-box">
+          <div class="player-box-header">
+            <span class="player-badge user">2e Invoer: Mijn Score</span>
+            <span id="userPhcpDisplay" class="strokes-received-chip">Baanhandicap: -</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputUserName">Jouw naam</label>
+            <input type="text" id="inputUserName" class="form-input" placeholder="Jouw naam" value="Mijn Score">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="inputUserHcp">WHS Handicap</label>
+              <input type="number" id="inputUserHcp" class="form-input" step="0.1" min="-10" max="54" placeholder="Bijv. 24.2" value="24.0">
+            </div>
+            <div class="form-group">
+              <label>Standaard Tee</label>
+              <div class="tee-pills" id="userTeePills">
+                <!-- Dynamisch gevuld -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="btnStartRound" class="btn btn-primary" style="margin-top: 10px;">
+          Start Scorekaart op Hole 1 ▶
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ================= VIEW 2: HOLE PLAY (SCOREKAART) ================= -->
+    <section id="viewPlay" class="app-view" style="display: none;">
+      
+      <!-- Hole Header Card -->
+      <div class="hole-header-card">
+        <div class="hole-nav-bar">
+          <div class="hole-title">
+            <span class="hole-number-big" id="currentHoleTitle">Hole 1</span>
+            <span class="hole-par-badge" id="currentHolePar">Par 4</span>
+            <span class="hole-si-badge" id="currentHoleSI">SI 13</span>
+          </div>
+          <div id="gpsStatusPill" class="gps-status-pill locating">
+            <span class="gps-dot">●</span> <span id="gpsStatusText">GPS zoeken...</span>
+          </div>
+        </div>
+
+        <!-- 9 holes dot bar -->
+        <div class="hole-dots-bar" id="holeDotsBar">
+          <!-- Dynamisch gegenereerd -->
+        </div>
+      </div>
+
+      <!-- Distance Indicators Card (Next Hole & Current Green) -->
+      <div class="distance-container">
+        
+        <!-- Next hole distance (Gebruikersvraag: afstand naar volgende hole!) -->
+        <div class="dist-card highlight" id="nextHoleDistCard">
+          <div class="dist-label">
+            <span id="nextHoleDistLabel">👉 Naar Hole 2</span>
+            <span style="font-size: 13px;">⛳</span>
+          </div>
+          <div class="dist-value" id="distToNextTee">
+            --- <small>m</small>
+          </div>
+          <div class="dist-sub" id="nextHoleSubInfo">
+            Tee afslag • Green: <span id="distToNextGreen">-- m</span>
+          </div>
+        </div>
+
+        <!-- Current green distance -->
+        <div class="dist-card" id="currentGreenDistCard">
+          <div class="dist-label">
+            <span>Naar Green <span id="currentHoleNumShort">1</span></span>
+            <span>🎯</span>
+          </div>
+          <div class="dist-value" id="distToCurrentGreen">
+            --- <small>m</small>
+          </div>
+          <div class="dist-sub" id="currentHoleCardLength">
+            Kaart: <span id="currentHoleLengthVal">330m</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 1E INVOER: Speelpartner (ALTIJD BOVENAAN) -->
+      <div class="stroke-card partner-card">
+        <div class="stroke-card-top">
+          <div class="player-info-title">
+            <span class="player-badge partner">1e</span>
+            <span class="player-name-text" id="playPartnerName">Speelpartner</span>
+          </div>
+          <span class="strokes-received-chip" id="partnerStrokesReceivedChip">+1 slag</span>
+        </div>
+
+        <div class="stepper-container">
+          <button class="btn-step" id="btnPartnerMinus" aria-label="Slag eraf">-</button>
+          <div class="score-display-box">
+            <div class="score-number-big" id="partnerScoreDisplay">4</div>
+            <div class="score-status-text" id="partnerScoreStatus">Par • 2 Ptn</div>
+          </div>
+          <button class="btn-step" id="btnPartnerPlus" aria-label="Slag erbij">+</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="inline-tee-selector">
+            <span class="inline-tee-label">Tee:</span>
+            <div id="partnerInlineTees" style="display: flex; gap: 4px;"></div>
+          </div>
+          <button class="btn-pickup-stroke" id="btnPartnerPickup">Streep (0)</button>
+        </div>
+      </div>
+
+      <!-- 2E INVOER: Mijn Score -->
+      <div class="stroke-card user-card">
+        <div class="stroke-card-top">
+          <div class="player-info-title">
+            <span class="player-badge user">2e</span>
+            <span class="player-name-text" id="playUserName">Mijn Score</span>
+          </div>
+          <span class="strokes-received-chip" id="userStrokesReceivedChip">+1 slag</span>
+        </div>
+
+        <div class="stepper-container">
+          <button class="btn-step" id="btnUserMinus" aria-label="Slag eraf">-</button>
+          <div class="score-display-box">
+            <div class="score-number-big" id="userScoreDisplay">4</div>
+            <div class="score-status-text" id="userScoreStatus">Par • 2 Ptn</div>
+          </div>
+          <button class="btn-step" id="btnUserPlus" aria-label="Slag erbij">+</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="inline-tee-selector">
+            <span class="inline-tee-label">Tee:</span>
+            <div id="userInlineTees" style="display: flex; gap: 4px;"></div>
+          </div>
+          <button class="btn-pickup-stroke" id="btnUserPickup">Streep (0)</button>
+        </div>
+      </div>
+
+      <!-- Bottom Action Navigation -->
+      <div class="hole-action-bar">
+        <button id="btnPrevHole" class="btn btn-secondary">◀ Vorige</button>
+        <button id="btnNextHole" class="btn btn-primary">Volgende Hole ▶</button>
+      </div>
+
+    </section>
+
+    <!-- ================= VIEW 3: SUMMARY & SCORECARD (EINDOVERZICHT) ================= -->
+    <section id="viewSummary" class="app-view" style="display: none;">
+      
+      <!-- Winner Trophy Banner -->
+      <div class="summary-header-card">
+        <div class="winner-trophy" id="summaryTrophy">🏆</div>
+        <div class="winner-text" id="summaryWinnerText">Ronde Voltooid!</div>
+        <div class="winner-sub" id="summaryWinnerSub">Griendbaan 9 Holes</div>
+      </div>
+
+      <!-- Spreek Score Voor Knop (Bonus Voice Feature) -->
+      <button id="btnSpeakSummary" class="btn btn-gold" style="margin-bottom: 14px;">
+        🔊 Lees Score Voor (Audio)
+      </button>
+
+      <!-- Head-to-Head Comparison Grid -->
+      <div class="summary-scores-grid">
+        
+        <!-- Partner Summary (Left) -->
+        <div class="summary-player-col partner">
+          <div class="summary-name" id="sumPartnerName">Speelpartner</div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Bruto slagen:</span>
+            <span class="summary-stat-val" id="sumPartnerGross">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Netto slagen:</span>
+            <span class="summary-stat-val" id="sumPartnerNet">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Stableford 9H:</span>
+            <span class="summary-stat-val highlight" id="sumPartnerStbf">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">18H Equivalent:</span>
+            <span class="summary-stat-val" id="sumPartnerStbf18">--</span>
+          </div>
+        </div>
+
+        <!-- User Summary (Right) -->
+        <div class="summary-player-col user">
+          <div class="summary-name" id="sumUserName">Mijn Score</div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Bruto slagen:</span>
+            <span class="summary-stat-val" id="sumUserGross">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Netto slagen:</span>
+            <span class="summary-stat-val" id="sumUserNet">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">Stableford 9H:</span>
+            <span class="summary-stat-val highlight" id="sumUserStbf">--</span>
+          </div>
+          <div class="summary-stat-row">
+            <span style="color: var(--text-muted);">18H Equivalent:</span>
+            <span class="summary-stat-val" id="sumUserStbf18">--</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Detailed Scorecard Table -->
+      <div class="scorecard-table-wrapper">
+        <table class="scorecard-table">
+          <thead>
+            <tr>
+              <th>Hole</th>
+              <th>Par</th>
+              <th>SI</th>
+              <th>Tee</th>
+              <th id="thPartnerName" style="color: var(--partner-color);">Partner</th>
+              <th id="thUserName" style="color: var(--user-color);">Ik</th>
+              <th>Stbf (P/Ik)</th>
+            </tr>
+          </thead>
+          <tbody id="scorecardTableBody">
+            <!-- Dynamisch gevuld -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="btnShareRound" class="btn btn-secondary">
+          📤 Deel Uitslag (Klembord / WhatsApp)
+        </button>
+        <button id="btnNewRoundFromSummary" class="btn btn-primary">
+          ⛳ Nieuwe Ronde Starten
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ================= VIEW 4: ROUNDS HISTORY ================= -->
+    <section id="viewHistory" class="app-view" style="display: none;">
+      <h2 class="screen-title">Gespeelde Rondes</h2>
+      <p class="screen-subtitle">Overzicht van eerdere rondes op de Griendbaan</p>
+
+      <div id="historyListContainer">
+        <!-- Dynamisch gevuld -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" id="tabScorecard">
+      <span class="tab-icon">⛳</span>
+      <span>Scorekaart</span>
+    </button>
+    <button class="tab-btn" id="tabSummary">
+      <span class="tab-icon">🏆</span>
+      <span>Uitslag</span>
+    </button>
+    <button class="tab-btn" id="tabHistory">
+      <span class="tab-icon">📜</span>
+      <span>Historie</span>
+    </button>
+    <a class="tab-btn" id="tabGolfdashboard" href="https://zeegersloot.golfdashboard.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <span class="tab-icon">🌐</span>
+      <span>Inchecken</span>
+    </a>
+  </nav>
+
+  <!-- JavaScript Modules -->
+  <script src="js/course-data.js"></script>
+  <script src="js/handicap.js"></script>
+  <script src="js/gps.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

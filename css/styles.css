@@ -1,0 +1,894 @@
+/* ==========================================================================
+   Golfclub Zeegersloot - Griendbaan Scorekaart
+   Mobile-First & Samsung Galaxy Z Flip 6 (Flex Window) Geoptimaliseerd
+   ========================================================================== */
+
+:root {
+  --primary: #10b981;
+  --primary-dark: #064e3b;
+  --primary-light: #34d399;
+  --bg-dark: #0a1410;
+  --card-bg: #14241d;
+  --card-border: #1f3a2f;
+  --card-hover: #1b3329;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent-gold: #f59e0b;
+  --accent-blue: #38bdf8;
+  --danger: #ef4444;
+  --partner-color: #38bdf8;
+  --user-color: #10b981;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+/* ================= Top Navigation Bar ================= */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 20, 16, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--card-border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
+
+.brand-text h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.brand-text p {
+  font-size: 11px;
+  color: var(--primary-light);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:active {
+  transform: scale(0.92);
+  background: var(--card-border);
+}
+
+.btn-mode-toggle {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: var(--primary-light);
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.btn-mode-toggle.active {
+  background: var(--primary);
+  color: #042f1a;
+  border-color: var(--primary);
+}
+
+/* ================= View Container ================= */
+.main-content {
+  flex: 1;
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 14px 14px 80px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  width: 100%;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-secondary {
+  background: #1e362c;
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary-light);
+  border: 1px solid var(--primary);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+}
+
+/* ================= Setup & Check-in Screen ================= */
+.screen-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.screen-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.checkin-banner {
+  background: linear-gradient(135deg, #064e3b, #0f3e2e);
+  border: 1px solid #15803d;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkin-banner h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #86efac;
+}
+
+.checkin-banner p {
+  font-size: 13px;
+  color: #d1fae5;
+  margin-bottom: 12px;
+}
+
+.player-box {
+  background: #0f1c16;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.player-box.partner-box {
+  border-left: 4px solid var(--partner-color);
+}
+
+.player-box.user-box {
+  border-left: 4px solid var(--user-color);
+}
+
+.player-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.player-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.5px;
+}
+
+.player-badge.partner {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--partner-color);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.player-badge.user {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--user-color);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  background: #0a1410;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 15px;
+  padding: 10px 12px;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Tee Selector Pills */
+.tee-pills {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tee-pill {
+  flex: 1;
+  min-width: 38px;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.tee-pill.selected {
+  outline: 3px solid #38bdf8;
+  outline-offset: 1px;
+  transform: scale(1.05);
+}
+
+/* ================= Hole Play Screen ================= */
+.hole-header-card {
+  background: linear-gradient(135deg, #132d23, #0d1e18);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.hole-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.hole-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hole-number-big {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.hole-par-badge {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-light);
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.hole-si-badge {
+  font-size: 13px;
+  color: var(--accent-gold);
+  font-weight: 600;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* 9-Holes dots progress */
+.hole-dots-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.hole-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #1f3a2f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hole-dot.completed {
+  background: var(--primary);
+}
+
+.hole-dot.current {
+  background: var(--accent-gold);
+  transform: scaleY(1.4);
+}
+
+/* ================= Distance Cards (Crucial Requirement) ================= */
+.distance-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.dist-card {
+  background: #0f1f18;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dist-card.highlight {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: linear-gradient(135deg, #0e2722, #0c201a);
+}
+
+.dist-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dist-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.dist-value small {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.dist-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.gps-status-pill {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gps-status-pill.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.gps-status-pill.locating {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.gps-status-pill.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* ================= Player Stroke Cards ================= */
+.stroke-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.stroke-card.partner-card {
+  border-top: 3px solid var(--partner-color);
+}
+
+.stroke-card.user-card {
+  border-top: 3px solid var(--user-color);
+}
+
+.stroke-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.player-info-title {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.player-name-text {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.player-hcp-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.strokes-received-chip {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Stepper Controls */
+.stepper-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.btn-step {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  background: #0f1c16;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.btn-step:active {
+  transform: scale(0.92);
+  background: var(--card-border);
+}
+
+.score-display-box {
+  flex: 1;
+  text-align: center;
+  background: #09120e;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 6px 0;
+}
+
+.score-number-big {
+  font-size: 38px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.score-status-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.btn-pickup-stroke {
+  background: transparent;
+  border: 1px dashed var(--card-border);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+/* Inline Tee Selector per hole */
+.inline-tee-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--card-border);
+}
+
+.inline-tee-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mini-tee-pill {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  opacity: 0.6;
+}
+
+.mini-tee-pill.active {
+  opacity: 1;
+  outline: 2px solid #38bdf8;
+  transform: scale(1.05);
+}
+
+/* Bottom Hole Navigation */
+.hole-action-bar {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* ================= Coverscherm (Flex Window) Modus ================= */
+/* Geoptimaliseerd voor Samsung Galaxy Z Flip 6 (3.4 inch, ~720x748) */
+body.cover-screen-mode {
+  font-size: 15px;
+}
+
+body.cover-screen-mode .app-header {
+  padding: 6px 10px;
+}
+
+body.cover-screen-mode .main-content {
+  padding: 8px 8px 60px 8px;
+}
+
+body.cover-screen-mode .hole-header-card {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+body.cover-screen-mode .distance-container {
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+body.cover-screen-mode .dist-card {
+  padding: 8px;
+}
+
+body.cover-screen-mode .dist-value {
+  font-size: 22px;
+}
+
+body.cover-screen-mode .stroke-card {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+body.cover-screen-mode .btn-step {
+  width: 64px;
+  height: 64px;
+  font-size: 30px;
+}
+
+body.cover-screen-mode .score-number-big {
+  font-size: 44px;
+}
+
+/* ================= Summary Screen (Eindoverzicht) ================= */
+.summary-header-card {
+  text-align: center;
+  background: linear-gradient(135deg, #093425, #052016);
+  border: 1px solid #10b981;
+  border-radius: var(--radius-lg);
+  padding: 22px 16px;
+  margin-bottom: 16px;
+}
+
+.winner-trophy {
+  font-size: 42px;
+  margin-bottom: 6px;
+}
+
+.winner-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.winner-sub {
+  font-size: 13px;
+  color: var(--primary-light);
+}
+
+.summary-scores-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-player-col {
+  background: #0f1c16;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  border: 1px solid var(--card-border);
+}
+
+.summary-player-col.partner {
+  border-top: 4px solid var(--partner-color);
+}
+
+.summary-player-col.user {
+  border-top: 4px solid var(--user-color);
+}
+
+.summary-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.summary-stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+
+.summary-stat-val {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.summary-stat-val.highlight {
+  color: var(--accent-gold);
+  font-size: 17px;
+}
+
+/* Detailed Scorecard Table */
+.scorecard-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  margin-bottom: 16px;
+}
+
+.scorecard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: center;
+}
+
+.scorecard-table th {
+  background: #0d1e18;
+  padding: 10px 6px;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.scorecard-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.scorecard-table tr:last-child td {
+  border-bottom: none;
+  font-weight: 700;
+  background: #0f241c;
+}
+
+/* Score Badges in table */
+.score-badge {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.badge-albatross { background: #d97706; color: #fff; }
+.badge-eagle { background: #f59e0b; color: #000; }
+.badge-birdie { background: #ef4444; color: #fff; }
+.badge-par { background: #10b981; color: #fff; }
+.badge-bogey { background: #3b82f6; color: #fff; }
+.badge-double { background: #64748b; color: #fff; }
+.badge-triple { background: #334155; color: #cbd5e1; }
+.badge-pickup { background: #475569; color: #cbd5e1; }
+
+/* ================= History Screen ================= */
+.history-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.history-item:active {
+  transform: scale(0.98);
+}
+
+.history-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.history-matchup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-player {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.history-points {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+/* ================= Bottom Tab Bar ================= */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 20, 16, 0.96);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 14px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease;
+}
+
+.tab-btn.active {
+  color: var(--primary-light);
+}
+
+.tab-icon {
+  font-size: 20px;
+}
