@@ -251,6 +251,22 @@
 
     const currentScore = state.scores[holeNum];
 
+    // Live cumulatieve tussenstand berekenen
+    const runningPartnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores, 'partner');
+    const runningUserSummary = HandicapCalculator.calculateSummary(state.user, state.scores, 'user');
+
+    // Live tussenstand balk in header bijwerken
+    const livePartnerName = document.getElementById('livePartnerName');
+    if (livePartnerName) {
+      livePartnerName.textContent = (state.partner.name || "Partner").substring(0, 10);
+      document.getElementById('livePartnerStbf').textContent = runningPartnerSummary.stablefordTotal;
+      document.getElementById('livePartnerGross').textContent = runningPartnerSummary.grossTotal;
+
+      document.getElementById('liveUserName').textContent = (state.user.name || "Ik").substring(0, 10);
+      document.getElementById('liveUserStbf').textContent = runningUserSummary.stablefordTotal;
+      document.getElementById('liveUserGross').textContent = runningUserSummary.grossTotal;
+    }
+
     // ================= Speelpartner (ALTIJD 1E) =================
     document.getElementById('playPartnerName').textContent = state.partner.name || "Speelpartner";
     const partnerPhcp = HandicapCalculator.calculatePlayingHandicap(state.partner.whsHandicap, currentScore.partnerTee);
@@ -258,7 +274,7 @@
     document.getElementById('partnerStrokesReceivedChip').textContent = 
       partnerStrokesReceived > 0 ? `+${partnerStrokesReceived} slag` : `${partnerStrokesReceived} slag`;
 
-    renderPartnerScoreDisplay(currentScore.partnerStrokes, hole.par, partnerStrokesReceived);
+    renderPartnerScoreDisplay(currentScore.partnerStrokes, hole.par, partnerStrokesReceived, runningPartnerSummary.stablefordTotal);
     renderInlineTees('partnerInlineTees', currentScore.partnerTee, (newTee) => {
       currentScore.partnerTee = newTee;
       saveActiveRoundState();
@@ -272,7 +288,7 @@
     document.getElementById('userStrokesReceivedChip').textContent = 
       userStrokesReceived > 0 ? `+${userStrokesReceived} slag` : `${userStrokesReceived} slag`;
 
-    renderUserScoreDisplay(currentScore.userStrokes, hole.par, userStrokesReceived);
+    renderUserScoreDisplay(currentScore.userStrokes, hole.par, userStrokesReceived, runningUserSummary.stablefordTotal);
     renderInlineTees('userInlineTees', currentScore.userTee, (newTee) => {
       currentScore.userTee = newTee;
       saveActiveRoundState();
@@ -312,36 +328,36 @@
     }
   }
 
-  function renderPartnerScoreDisplay(strokes, par, strokesReceived) {
+  function renderPartnerScoreDisplay(strokes, par, strokesReceived, totalStbf = 0) {
     const display = document.getElementById('partnerScoreDisplay');
     const status = document.getElementById('partnerScoreStatus');
 
     if (strokes === 0 || strokes === '0') {
       display.textContent = '—';
-      status.textContent = 'Streep (0 ptn)';
+      status.textContent = `Streep (0 ptn) • Totaal: ${totalStbf} Ptn`;
       return;
     }
 
     display.textContent = strokes;
     const badge = HandicapCalculator.getScoreBadge(strokes, par, strokesReceived, false);
     const stbf = HandicapCalculator.calculateStableford(strokes, par, strokesReceived);
-    status.textContent = `${badge.label} • ${stbf} Ptn`;
+    status.textContent = `${badge.label} • ${stbf} Ptn (Totaal: ${totalStbf} Ptn)`;
   }
 
-  function renderUserScoreDisplay(strokes, par, strokesReceived) {
+  function renderUserScoreDisplay(strokes, par, strokesReceived, totalStbf = 0) {
     const display = document.getElementById('userScoreDisplay');
     const status = document.getElementById('userScoreStatus');
 
     if (strokes === 0 || strokes === '0') {
       display.textContent = '—';
-      status.textContent = 'Streep (0 ptn)';
+      status.textContent = `Streep (0 ptn) • Totaal: ${totalStbf} Ptn`;
       return;
     }
 
     display.textContent = strokes;
     const badge = HandicapCalculator.getScoreBadge(strokes, par, strokesReceived, false);
     const stbf = HandicapCalculator.calculateStableford(strokes, par, strokesReceived);
-    status.textContent = `${badge.label} • ${stbf} Ptn`;
+    status.textContent = `${badge.label} • ${stbf} Ptn (Totaal: ${totalStbf} Ptn)`;
   }
 
   function renderInlineTees(containerId, activeTee, onSelect) {
@@ -436,8 +452,8 @@
 
   // ================= Summary View (Eindoverzicht) =================
   function renderSummary() {
-    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores);
-    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores);
+    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores, 'partner');
+    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores, 'user');
 
     // Bepaal de winnaar op basis van Stableford punten (of Netto als gelijk)
     let winnerText = "Gelijkspel!";
@@ -529,8 +545,8 @@
       return;
     }
 
-    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores);
-    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores);
+    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores, 'partner');
+    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores, 'user');
 
     let winnerSentence = "";
     if (partnerSummary.stablefordTotal > userSummary.stablefordTotal) {
@@ -559,8 +575,8 @@
 
   // ================= Share Round =================
   function shareRound() {
-    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores);
-    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores);
+    const partnerSummary = HandicapCalculator.calculateSummary(state.partner, state.scores, 'partner');
+    const userSummary = HandicapCalculator.calculateSummary(state.user, state.scores, 'user');
 
     const text = `⛳ *Golfclub Zeegersloot - Griendbaan (9 Holes)*\n` +
       `📅 ${new Date().toLocaleDateString('nl-NL')}\n\n` +

@@ -104,8 +104,11 @@ Object.assign(HandicapCalculator, {
 
   /**
    * Bereken complete samenvatting voor een speler
+   * @param {Object} player - { name, whsHandicap, defaultTee }
+   * @param {Object} scores - { [holeNum]: { partnerStrokes, partnerTee, userStrokes, userTee } }
+   * @param {string} playerType - 'partner' | 'user'
    */
-  calculateSummary(player, scores) {
+  calculateSummary(player, scores, playerType = 'user') {
     let grossTotal = 0;
     let netTotal = 0;
     let stablefordTotal = 0;
@@ -114,11 +117,23 @@ Object.assign(HandicapCalculator, {
 
     COURSE_DATA.holes.forEach((hole) => {
       const hData = scores[hole.number] || {};
-      const strokes = hData.strokes !== undefined && hData.strokes !== null && hData.strokes !== '' 
-        ? parseInt(hData.strokes, 10) 
+      
+      // Ondersteun zowel partnerStrokes/userStrokes als generieke strokes
+      let strokesRaw = null;
+      let teeKey = player.defaultTee || 'geel';
+
+      if (playerType === 'partner') {
+        strokesRaw = hData.partnerStrokes !== undefined ? hData.partnerStrokes : hData.strokes;
+        teeKey = hData.partnerTee || hData.tee || player.defaultTee || 'geel';
+      } else {
+        strokesRaw = hData.userStrokes !== undefined ? hData.userStrokes : hData.strokes;
+        teeKey = hData.userTee || hData.tee || player.defaultTee || 'geel';
+      }
+
+      const strokes = (strokesRaw !== undefined && strokesRaw !== null && strokesRaw !== '') 
+        ? parseInt(strokesRaw, 10) 
         : null;
       
-      const teeKey = hData.tee || player.defaultTee || 'geel';
       const playingHcp = this.calculatePlayingHandicap(player.whsHandicap, teeKey);
       const strokesReceived = this.getStrokesReceived(hole.strokeIndex, playingHcp);
       
@@ -133,7 +148,7 @@ Object.assign(HandicapCalculator, {
           netTotal += net;
           stableford = this.calculateStableford(strokes, hole.par, strokesReceived);
         } else {
-          // Streep
+          // Streep (0) = 0 stableford punten
           stableford = 0;
         }
         stablefordTotal += stableford;
