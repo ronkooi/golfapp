@@ -676,15 +676,15 @@
 
     // Golfdashboard inchecken knop in banner
     const btnOpenCheckin = document.getElementById('btnOpenGolfdashboard');
-    const btnQuickStart = document.getElementById('btnQuickStartAfterCheckin');
+    const btnBannerStart = document.getElementById('btnBannerStartRound');
 
     if (btnOpenCheckin) {
       btnOpenCheckin.href = state.golfdashboardUrl;
-      btnOpenCheckin.addEventListener('click', () => {
-        if (btnQuickStart) {
-          btnQuickStart.style.display = 'block';
-          btnQuickStart.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+    }
+
+    if (btnBannerStart) {
+      btnBannerStart.addEventListener('click', () => {
+        startNewRound();
       });
     }
 
